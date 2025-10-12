@@ -1,0 +1,25 @@
+﻿@using DataAccessLayer.Entity
+@model List<Student>
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Address</th>
+        <th>Email</th>
+        <th>Image</th>
+    </tr>
+    @foreach(var item in Model)
+    {
+        <tr>
+            <td>@item.SSN</td>
+            <td>@item.Name</td>
+            <td>@item.Age</td>
+            <td>@item.Address</td>
+            <td>@item.Email</td>
+            <td><img src="/Images/@item.ImageURL" width="60px"/></td>
+        </tr>
+    }
+</table>
+
