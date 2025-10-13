@@ -1,0 +1,19 @@
+﻿@using DataAccessLayer.Models
+@model Department
+
+@{
+    ViewData["Title"] = "GetByName";
+}
+
+<h2>Id: @Model.Id</h2>
+<h2>Name: @Model.Name</h2>
+<h2>ManagerName: @Model.ManagerName</h2>
+<h2>Location: @Model.Location</h2>
+<h2>
+    Branches:
+    @foreach (var b in Model.Branches)
+    {
+        <span>@b.BranchName, </span>
+    }
+</h2>
+

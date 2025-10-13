@@ -1,5 +1,5 @@
 ﻿using DataAccessLayer.Context;
-using DataAccessLayer.Entity;
+using DataAccessLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace BusinessLogicLayer.Service
 {
     public class StudentService
     {
-        static StudentContext Context = new StudentContext();
+        static UniversityContext Context = new UniversityContext();
         public static List<Student> GetAllStudents()
         {
             List<Student> students = Context.Students.ToList();
@@ -23,6 +23,13 @@ namespace BusinessLogicLayer.Service
             Student? student = Context.Students.FirstOrDefault(s => s.SSN == SSN);
 
             return student;
+        }
+
+        public static bool AddStudent(Student student)
+        {
+            Context.Students.Add(student);
+            int affectedRows = Context.SaveChanges();
+            return affectedRows > 0;
         }
     }
 }

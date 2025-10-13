@@ -1,0 +1,32 @@
+﻿@using DataAccessLayer.Models
+
+@{
+    ViewData["Title"] = "Add Department";
+}
+
+<h1>Add Department</h1>
+
+<form action="/Department/AddDepartment">
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input type="text" class="form-control" name="Name">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Manager Name</label>
+        <input type="text" class="form-control" name="ManagerName">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Location</label>
+        <input type="text" class="form-control" name="Location">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Branches</label>
+        <select class="form-control" name="BranchName">
+            @foreach(var branch in Enum.GetValues(typeof(Branches)))
+            {
+                <option >@branch</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
