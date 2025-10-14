@@ -15,6 +15,8 @@ public partial class Student
     public int SSN { get; set; }
 
     [StringLength(30)]
+
+    [Display(Name = "Full Name")] // will only affect the label tag in the view not the database column name
     public string Name { get; set; } = null!;
 
     public int Age { get; set; }
@@ -26,6 +28,7 @@ public partial class Student
     public string? ImageURL { get; set; }
 
     [StringLength(30)]
+    [DataType(DataType.EmailAddress)]
     public string? Email { get; set; }
 
     [ForeignKey("Department")]

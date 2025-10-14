@@ -6,7 +6,7 @@
 }
 
 
-<h2>Id: @Model.Id</h2>
+@* <h2>Id: @Model.Id</h2>
 <h2>Name: @Model.Name</h2>
 <h2>ManagerName: @Model.ManagerName</h2>
 <h2>Location: @Model.Location</h2>
@@ -15,4 +15,20 @@
     {
         <span>@b.BranchName, </span>
     }
-</h2>
+</h2> *@
+
+<div class="card border-primary mb-3" style="max-width: 25rem;">
+    <div class="card-header">Department Details</div>
+    <div class="card-body text-primary">
+        <h2 class="card-title">@Model.Name</h2>
+        <p class="card-text"> <strong>Manager:</strong> @Model.ManagerName</p>
+        <p class="card-text"><strong>Location:</strong> @Model.Location</p>
+        <p class="card-text"><strong>Branches:</strong> 
+            @foreach (var b in Model.Branches)
+            {
+                <span>@b.BranchName, </span>
+            }
+        </p>
+        <a asp-action="GetAll" asp-controller="Department" class="btn btn-primary btn-outline-dark">Back to list</a>
+        <a asp-action="Edit" asp-controller="Department" asp-route-id="@Model.Id" class="btn btn-warning btn-outline-dark">Update Department</a>
+    </div>

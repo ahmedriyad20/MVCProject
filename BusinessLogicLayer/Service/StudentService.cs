@@ -1,35 +1,39 @@
 ﻿using DataAccessLayer.Context;
 using DataAccessLayer.Models;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.Service
 {
     public class StudentService
     {
-        static UniversityContext Context = new UniversityContext();
-        public static List<Student> GetAllStudents()
+        private readonly UniversityContext _context;
+        public StudentService(UniversityContext context)
         {
-            List<Student> students = Context.Students.ToList();
-
-            return students;
+            _context = context; 
         }
 
-        public static Student GetStudentById(int SSN)
-        {
-            Student? student = Context.Students.FirstOrDefault(s => s.SSN == SSN);
+        public List<Student> GetAllStudents() => _context.Students.ToList();
 
-            return student;
+        public Student? GetStudentById(int SSN) => _context.Students.FirstOrDefault(s => s.SSN == SSN);
+
+        public bool AddStudent(Student student)
+        {
+            _context.Students.Add(student);
+            return _context.SaveChanges() > 0;
         }
 
-        public static bool AddStudent(Student student)
+        public bool UpdateStudent(Student student)
         {
-            Context.Students.Add(student);
-            int affectedRows = Context.SaveChanges();
-            return affectedRows > 0;
+
+            _context.Students.Update(student);
+            if (_context.SaveChanges() > 0)
+            {
+                return true;
+            }
+            else
+                return false;
         }
     }
 }

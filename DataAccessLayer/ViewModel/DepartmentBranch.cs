@@ -10,6 +10,7 @@ namespace DataAccessLayer.ViewModel
 {
     public class DepartmentBranch
     {
+        public int DepartmentId { get; set; }
         public string Name { get; set; } = null!;
         public string? ManagerName { get; set; }
         public string? Location { get; set; }

@@ -1,23 +1,24 @@
 ﻿@using DataAccessLayer.Models
-
+@using DataAccessLayer.ViewModel
+@model DepartmentBranch
 @{
     ViewData["Title"] = "Add Department";
 }
 
 <h1>Add Department</h1>
 
-<form action="/Department/AddDepartment">
+<form action="/Department/AddDepartment" method="post">
     <div class="mb-3">
         <label class="form-label">Name</label>
-        <input type="text" class="form-control" name="Name">
+        <input type="text" value="@Model?.Name" class="form-control" name="Name">
     </div>
     <div class="mb-3">
         <label class="form-label">Manager Name</label>
-        <input type="text" class="form-control" name="ManagerName">
+        <input type="text" value="@Model?.ManagerName" class="form-control" name="ManagerName">
     </div>
     <div class="mb-3">
         <label class="form-label">Location</label>
-        <input type="text" class="form-control" name="Location">
+        <input type="text" value="@Model?.Location"  class="form-control" name="Location">
     </div>
     <div class="mb-3">
         <label class="form-label">Branches</label>

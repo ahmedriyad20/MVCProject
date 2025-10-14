@@ -1,0 +1,31 @@
+﻿@using DataAccessLayer.Models
+@model Instructor
+
+@{
+
+}
+
+<h1>Instructor Detials</h1>
+<div class="card mb-3" style="max-width: 720px;">
+    <div class="row g-0">
+        <div class="col-md-4 d-flex align-items-center justify-content-center p-2">
+            <img src="/Images/@Model.ImageUrl" class="img-fluid rounded" alt="@Model.Name" style="max-height:160px; object-fit:cover;" />
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title mb-1">@Model.Name</h5>
+
+                <ul class="list-unstyled mb-2">
+                    <li><strong>Age:</strong> @Model.Age</li>
+                    <li><strong>Salary:</strong> @Model.Salary</li>
+                    <li><strong>Address:</strong> @Model.Address</li>
+                    <li><strong>Hiring Date:</strong>>@Model.HiringDate</li>
+                    <li><strong>Department Name:</strong>>@ViewBag.deptName</li>
+                </ul>
+
+                <a asp-action="GetAll" asp-controller="Instructor" class="btn btn-primary btn-outline-dark">Back to list</a>
+                <a asp-action="Edit" asp-controller="Instructor" asp-route-id="@Model.Id" class="btn btn-warning btn-outline-dark">Update Instructor</a>
+            </div>
+        </div>
+    </div>
+</div>
