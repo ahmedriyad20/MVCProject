@@ -1,40 +1,22 @@
 ﻿@using DataAccessLayer.Models
-@model Student
+@using DataAccessLayer.ViewModel
+@model StudentCourseViewModel
 @{
     ViewData["Title"] = "Edit Student";
-    SelectList deptList = new SelectList(ViewBag.Departments, "Id", "Name");
 }
 
 
-<h1>Update Student</h1>
+<h1  >Update Student</h1>
 
 <form asp-action="Edit" asp-controller="Student" method="post">
     <input type="hidden" asp-for="SSN" />
-    <div class="mb-3">
-        <label class="form-label" asp-for="Name"></label>
-        <input asp-for="Name" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="Age"></label>
-        <input asp-for="Age" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="Address"></label>
-        <input asp-for="Address" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="ImageURL"></label>
-        <input asp-for="ImageURL" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="Email"></label>
-        <input asp-for="Email" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">DepartmentNo.</label>
-        <select class="form-control" asp-items="deptList" asp-for="DepartmentId">
-          
-        </select>
-    </div>
+    <partial name="AddEditStudentPartialView" />
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+@* <partial name="_ValidationScriptsPartial" /> Not Working Idk why *@ 
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+}

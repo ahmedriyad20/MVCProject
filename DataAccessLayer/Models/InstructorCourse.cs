@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Models;
 
+[Table("InstructorCourse")]
 
 public partial class InstructorCourse
 {

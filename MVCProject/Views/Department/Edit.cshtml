@@ -3,29 +3,18 @@
 @model DepartmentBranch
 @{
     ViewData["Title"] = "Edit Department";
-    SelectList branchesList = new SelectList(Enum.GetValues(typeof(Branches)));
 }
 
-<h1>Update Department</h1>
+<h1 >Update Department</h1>
 
 <form asp-action="Edit" asp-controller="Department" method="post">
     <input type="hidden" asp-for="DepartmentId" />
-    <div class="mb-3">
-        <label class="form-label" asp-for="Name"></label>
-        <input asp-for="Name" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="ManagerName"></label>
-        <input asp-for="ManagerName" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="Location"></label>
-        <input asp-for="Location" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Branches</label>
-        <select class="form-control" asp-items="branchesList" asp-for="BranchName">
-        </select>
-    </div>
+    <partial name="AddEditDepartmentPartialView" />
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+}

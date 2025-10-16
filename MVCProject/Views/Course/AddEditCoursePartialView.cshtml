@@ -1,0 +1,28 @@
+﻿@using DataAccessLayer.Models
+@model Course
+
+<div class="mb-3">
+    <label class="form-label" asp-for="Name"></label>
+    <input asp-for="Name" class="form-control">
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label" asp-for="Topic"></label>
+    <input asp-for="Topic" class="form-control">
+    <span asp-validation-for="Topic" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label" asp-for="Degree"></label>
+    <input asp-for="Degree" class="form-control">
+    <span asp-validation-for="Degree" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label" asp-for="MinDegree"></label>
+    <input asp-for="MinDegree" class="form-control">
+    <span asp-validation-for="MinDegree" class="text-danger"></span>
+</div>
+@* <div class="mb-3">
+    <label class="form-label">DepartmentNo.</label>
+    <select class="form-control" asp-items="deptList" asp-for="DepartmentId">
+    </select>
+</div> *@

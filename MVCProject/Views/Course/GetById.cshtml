@@ -1,0 +1,32 @@
+﻿@using DataAccessLayer.Models
+@model Course
+@{
+    ViewData["Title"] = "GetById";
+}
+
+<h1 style="margin-left:100px">Course Details</h1>
+<div class="card border-primary mb-3" style="max-width: 25rem; margin-left:100px">
+    <div class="card-header">Course Details</div>
+    <div class="card-body text-primary">
+        <h2 class="card-title">@Model.Name</h2>
+        <p class="card-text"> <strong>Topic:</strong> @Model.Topic</p>
+        <p class="card-text"><strong>Degree:</strong> @Model.Degree</p>
+        <p class="card-text"><strong>Min Degree:</strong> @Model.MinDegree</p>
+        <p class="card-text">
+            <strong>Students:</strong>
+            @foreach (var b in ViewBag.Students)
+            {
+                <span>@b.Name, </span>
+            }
+        </p>
+        <p class="card-text">
+            <strong>Instructors:</strong>
+            @foreach (var b in ViewBag.Instructors)
+            {
+                <span>@b.Name, </span>
+            }
+        </p>
+        <a asp-action="GetAll" asp-controller="Course" class="btn btn-primary btn-outline-dark">Back to list</a>
+        <a asp-action="Edit" asp-controller="Course" asp-route-id="@Model.Id" class="btn btn-warning btn-outline-dark">Update Course</a>
+    </div>
+</div>

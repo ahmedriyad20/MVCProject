@@ -1,50 +1,22 @@
 ﻿@using DataAccessLayer.Models
-@model Student
+@using DataAccessLayer.ViewModel
+@model StudentCourseViewModel
 @{
-    ViewData["Title"] = "Add Student";
+    ViewData["Title"] = "Edit Student";
+
 }
+
 
 <h1>Add Student</h1>
 
-<form action="/Student/AddStudent" method="post">
-    <div class="mb-3">
-        <label class="form-label">Name</label>
-        <input type="text" value="@Model?.Name" class="form-control" name="Name">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Age</label>
-        <input type="number" value="@Model?.Age" class="form-control" name="Age">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Address</label>
-        <input type="text" value="@Model?.Address" class="form-control" name="Address">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">ImageURL</label>
-        <input type="text" value="@Model?.ImageURL" class="form-control" name="ImageURL">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" value="@Model?.Email" class="form-control" name="Email">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">DepartmentNo.</label>
-        @* <input type="number" value="@Model?.DepartmentId" class="form-control" name="DepartmentId"> *@
-        <select class="form-control" name="DepartmentId">
-            @foreach (var d in ViewBag.Departments)
-            {
-                if(d.Id == Model?.DepartmentId)
-                {
-                    <option selected value="@d.Id">@d.Name</option>
-                }
-                else
-                {
-                    <option value="@d.Id">@d.Name</option>
-                }
-                
-            }
-
-        </select>
-    </div>
+<form asp-action="Add" asp-controller="Student" method="post">
+    <partial name="AddEditStudentPartialView" />
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+@* <partial name="_ValidationScriptsPartial" /> Not Working Idk why *@ 
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+}

@@ -1,7 +1,10 @@
 ﻿@using DataAccessLayer.Models
 @model List<Student>
 
-<h1>All Students</h1>
+<h1 class="text-center">All Students</h1>
+<a href="/Student/Add" class="btn btn-primary btn-lg " style="width: 25%;">Add Student</a>
+<br />
+<br />
 <table class="table table-bordered table-hover">
     <tr>
         <th>#</th>
@@ -10,6 +13,9 @@
         <th>Address</th>
         <th>Email</th>
         <th>Image</th>
+        <th>Department</th>
+        @* <th>Course Name</th>
+        <th>Degree</th> *@
         <th>Actions</th>
     </tr>
     @foreach(var item in Model)
@@ -21,13 +27,17 @@
             <td>@item.Address</td>
             <td>@item.Email</td>
             <td><img src="/Images/@item.ImageURL" width="60px"/></td>
+            <td>@item.Department?.Name</td>
+            @* <td>@item.StudentCourses?.FirstOrDefault()?.Course?.Name</td>
+            <td></td> *@
             <td>
                 <a asp-action="GetById" asp-controller="Student" asp-route-id="@item.SSN" class="btn btn-info">Details</a>
                 <a asp-action="Edit" asp-controller="Student" asp-route-id="@item.SSN" class="btn btn-warning">Update Student</a>
                 <a asp-action="Delete" asp-controller="Student" asp-route-id="@item.SSN" class="btn btn-danger">Delete Student</a>
+                @* <a asp-action="AddStudentCourse" asp-controller="Student" *@
             </td>
         </tr>
     }
 </table>
-<a href="/Student/Add" class="btn btn-primary">Add Student</a>
+
 

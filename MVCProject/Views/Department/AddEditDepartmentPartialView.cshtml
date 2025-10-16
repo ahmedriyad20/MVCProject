@@ -1,0 +1,30 @@
+﻿@using DataAccessLayer.Models
+@using DataAccessLayer.ViewModel
+@model DepartmentBranch
+@{
+    ViewData["Title"] = "Edit Department";
+    SelectList branchesList = new SelectList(Enum.GetValues(typeof(Branches)));
+}
+
+
+<div class="mb-3">
+    <label class="form-label" asp-for="Name"></label>
+    <input asp-for="Name" class="form-control">
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label" asp-for="ManagerName"></label>
+    <input asp-for="ManagerName" class="form-control">
+    <span asp-validation-for="ManagerName" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label" asp-for="Location"></label>
+    <input asp-for="Location" class="form-control">
+    <span asp-validation-for="Location" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label">Branches</label>
+    <select class="form-control" asp-items="branchesList" asp-for="BranchName">
+    </select>
+    <span asp-validation-for="BranchName" class="text-danger"></span>
+</div>

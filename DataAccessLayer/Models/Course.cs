@@ -19,8 +19,10 @@ public partial class Course
     [StringLength(30)]
     public string Topic { get; set; } = null!;
 
+    [Range(60, 100, ErrorMessage = "Degree must be between 60 and 100.")]
     public float Degree { get; set; }
 
+    [Range(60, 60, ErrorMessage = "Min Degree cannot be less than 60")]
     public float MinDegree { get; set; }
 
     //Navigation Property

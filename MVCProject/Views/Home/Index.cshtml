@@ -2,7 +2,55 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@section HomeHeader{
+    <header class="masthead bg-primary text-white text-center">
+        <div class="container d-flex align-items-center flex-column">
+            <!-- Masthead Avatar Image-->
+            <img class="masthead-avatar mb-5" src="/assets/img/avataaars.svg" alt="..." />
+            <!-- Masthead Heading-->
+            <h1 class="masthead-heading  mb-0">University Managment</h1>
+            <div class="divider-custom divider-light">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+            <!-- Masthead Subheading-->
+            <p class="masthead-subheading font-weight-light mb-0">A unified platform for student services, course management, and academic administration.</p>
+        </div>
+    </header>
+    <br /> <br />
+    <!-- About Section-->
+    <section class="page-section bg-primary text-white mb-0" id="about">
+        <div class="container">
+            <!-- About Section Heading-->
+            <h2 class="page-section-heading text-center text-uppercase text-white">About</h2>
+            <!-- Icon Divider-->
+            <div class="divider-custom divider-light">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+            <!-- About Section Content-->
+            <div class="row">
+                <div class="col-lg-4 ms-auto">
+                  <p class="lead">
+                    The University Management System centralizes student, instructor, course, and department data in a secure, role-based portal. It streamlines enrollment, scheduling, grading, and transcript generation while providing administrators with tools for reporting and resource planning.
+                  </p>
+                </div>
+                <div class="col-lg-4 me-auto">
+                  <p class="lead">
+                    Designed for clarity and efficiency, the system offers real-time dashboards, automated notifications, and easy integrations with campus services. It reduces administrative overhead, improves student success tracking, and makes academic processes transparent and auditable.
+                  </p>
+                </div>
+            </div>
+            <!-- About Section Button-->
+            <div class="text-center mt-4">
+                <a class="btn btn-xl btn-outline-light" href="#">
+                    @* href="https://startbootstrap.com/theme/freelancer/" *@
+                    <i class="fas fa-download me-2"></i>
+                    Explore Now!
+                </a>
+            </div>
+        </div>
+    </section>
+}

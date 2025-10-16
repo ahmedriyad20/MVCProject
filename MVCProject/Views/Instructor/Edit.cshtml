@@ -6,39 +6,16 @@
 }
 
 
-<h1>Edit Instructor</h1>
+<h1 >Edit Instructor</h1>
 
 <form asp-action="Edit" asp-controller="Instructor" method="post">
     <input type="hidden" asp-for="Id" />
-    <div class="mb-3">
-        <label class="form-label" asp-for="Name"></label>
-        <input asp-for="Name" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="Age"></label>
-        <input asp-for="Age" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="Salary"></label>
-        <input asp-for="Salary" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="Address"></label>
-        <input asp-for="Address" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="ImageUrl"></label>
-        <input asp-for="ImageUrl" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="HiringDate"></label>
-        <input asp-for="HiringDate" class="form-control">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">DepartmentNo.</label>
-        <select class="form-control" asp-items="deptList" asp-for="DepartmentId">
-        </select>
-    </div>
+    <partial name="AddEditInstructorPartialView" />
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+}

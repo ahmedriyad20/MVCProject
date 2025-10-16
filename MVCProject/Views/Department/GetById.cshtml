@@ -17,7 +17,7 @@
     }
 </h2> *@
 
-<div class="card border-primary mb-3" style="max-width: 25rem;">
+<div class="card border-primary mb-3" style="max-width: 25rem; margin-left:100px">
     <div class="card-header">Department Details</div>
     <div class="card-body text-primary">
         <h2 class="card-title">@Model.Name</h2>
@@ -32,3 +32,4 @@
         <a asp-action="GetAll" asp-controller="Department" class="btn btn-primary btn-outline-dark">Back to list</a>
         <a asp-action="Edit" asp-controller="Department" asp-route-id="@Model.Id" class="btn btn-warning btn-outline-dark">Update Department</a>
     </div>
+</div>

@@ -5,8 +5,8 @@
 
 }
 
-<h1>Instructor Detials</h1>
-<div class="card mb-3" style="max-width: 720px;">
+<h1 style="margin-left:100px">Instructor Detials</h1>
+<div class="card mb-3" style="max-width: 720px; margin-left:100px;">
     <div class="row g-0">
         <div class="col-md-4 d-flex align-items-center justify-content-center p-2">
             <img src="/Images/@Model.ImageUrl" class="img-fluid rounded" alt="@Model.Name" style="max-height:160px; object-fit:cover;" />
@@ -19,8 +19,8 @@
                     <li><strong>Age:</strong> @Model.Age</li>
                     <li><strong>Salary:</strong> @Model.Salary</li>
                     <li><strong>Address:</strong> @Model.Address</li>
-                    <li><strong>Hiring Date:</strong>>@Model.HiringDate</li>
-                    <li><strong>Department Name:</strong>>@ViewBag.deptName</li>
+                    <li><strong>Hiring Date:</strong> @Model.HiringDate</li>
+                    <li><strong>Department Name:</strong> @ViewBag.deptName</li>
                 </ul>
 
                 <a asp-action="GetAll" asp-controller="Instructor" class="btn btn-primary btn-outline-dark">Back to list</a>

@@ -17,6 +17,7 @@ public partial class Instructor
     [StringLength(20)]
     public string Name { get; set; } = null!;
 
+    [Range(23, 60, ErrorMessage = "Age must be between 23 and 60")]
     public int Age { get; set; }
 
     public float Salary { get; set; }
@@ -30,10 +31,10 @@ public partial class Instructor
     public DateTime HiringDate { get; set; }
 
     [ForeignKey("Department")]
-    public int DepartmentId { get; set; }
+    public int? DepartmentId { get; set; }
 
     //Navigation Property
-    public virtual Department Department { get; set; } = null!;
+    public virtual Department? Department { get; set; } = null!;
 
     public virtual ICollection<InstructorCourse> InstructorCourses { get; set; } = new HashSet<InstructorCourse>();
 }

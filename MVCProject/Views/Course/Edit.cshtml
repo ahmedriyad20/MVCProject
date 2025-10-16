@@ -1,14 +1,12 @@
-﻿@using DataAccessLayer.Models
-@using DataAccessLayer.ViewModel
-@model DepartmentBranch
+﻿
 @{
-    ViewData["Title"] = "Add Department";
+    ViewData["Title"] = "Edit";
 }
 
-<h1 >Add Department</h1>
+<h1>Update Course</h1>
 
-<form action="/Department/AddDepartment" method="post">
-    <partial name="AddEditDepartmentPartialView" />
+<form asp-action="Edit" asp-controller="Course" method="post">
+    <partial name="AddEditCoursePartialView" />
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 

@@ -1,7 +1,11 @@
 ﻿@using DataAccessLayer.Models
 @model List<Instructor>
 
-<h1>All Instructors</h1>
+<h1 class="text-center">All Instructors</h1>
+
+<a asp-action="Add" asp-controller="Instructor" class="btn btn-primary btn-lg " style="width: 25%;">Add Instructor</a>
+<br />
+<br />
 <table class="table table-bordered table-hover">
     <tr>
         <th>#</th>
@@ -31,4 +35,4 @@
         </tr>
     }
 </table>
-<a asp-action="Add" asp-controller="Instructor" class="btn btn-primary">Add Instructor</a>
+@* <a asp-action="Add" asp-controller="Instructor" class="btn btn-primary">Add Instructor</a> *@

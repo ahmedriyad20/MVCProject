@@ -14,9 +14,10 @@ namespace BusinessLogicLayer.Service
             _context = context; 
         }
 
-        public List<Student> GetAllStudents() => _context.Students.ToList();
+        public List<Student> GetAllStudents() =>
+            _context.Students.Include(s => s.Department).Include(s => s.StudentCourses).ToList();
 
-        public Student? GetStudentById(int SSN) => _context.Students.FirstOrDefault(s => s.SSN == SSN);
+        public Student? GetStudentById(int SSN) => _context.Students.Include(s => s.Department).FirstOrDefault(s => s.SSN == SSN);
 
         public bool AddStudent(Student student)
         {

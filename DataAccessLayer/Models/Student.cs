@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DataAccessLayer.Validators;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Models;
@@ -15,10 +16,11 @@ public partial class Student
     public int SSN { get; set; }
 
     [StringLength(30)]
-
     [Display(Name = "Full Name")] // will only affect the label tag in the view not the database column name
+    [RegularExpression("[a-zA-Z ]{3,30}", ErrorMessage = "Only letters and spaces are allowed.")]
     public string Name { get; set; } = null!;
 
+    [Range(17, 35, ErrorMessage ="Age must be between 17 and 35")]
     public int Age { get; set; }
 
     [StringLength(30)]
@@ -28,8 +30,9 @@ public partial class Student
     public string? ImageURL { get; set; }
 
     [StringLength(30)]
-    [DataType(DataType.EmailAddress)]
-    public string? Email { get; set; }
+    [EmailAddress]
+    [UniqueEmail] // Custom validation attribute to ensure email uniqueness
+    public string Email { get; set; }
 
     [ForeignKey("Department")]
     public int? DepartmentId { get; set; }

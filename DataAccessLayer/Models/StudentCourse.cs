@@ -17,6 +17,7 @@ public partial class StudentCourse
 
     public int CourseId { get; set; }
 
+    [Range(0, 100, ErrorMessage ="Grade is between 0 and 100")]
     public float Grade { get; set; }
 
     // Navigation Property

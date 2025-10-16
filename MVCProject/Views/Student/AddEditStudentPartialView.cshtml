@@ -1,0 +1,54 @@
+﻿@using DataAccessLayer.Models
+@using DataAccessLayer.ViewModel
+@model StudentCourseViewModel
+@{
+    ViewData["Title"] = "Edit Student";
+    SelectList deptList = new SelectList(ViewBag.Departments, "Id", "Name");
+    SelectList courseList = new SelectList(ViewBag.Courses, "Id", "Name");
+}
+
+
+<div class="mb-3">
+    <label class="form-label" asp-for="Name"></label>
+    <input asp-for="Name" class="form-control">
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label" asp-for="Age"></label>
+    <input asp-for="Age" class="form-control">
+    <span asp-validation-for="Age" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label" asp-for="Address"></label>
+    <input asp-for="Address" class="form-control">
+    <span asp-validation-for="Address" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label" asp-for="ImageURL"></label>
+    <input asp-for="ImageURL" class="form-control">
+    <span asp-validation-for="ImageURL" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label" asp-for="Email"></label>
+    <input asp-for="Email" class="form-control">
+    <span asp-validation-for="Email" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label">DepartmentNo.</label>
+    <select class="form-control" asp-items="deptList" asp-for="DepartmentId">
+        <option value="0">-- Select Department --</option>
+    </select>
+    <span asp-validation-for="DepartmentId" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label">Course Name.</label>
+    <select class="form-control" asp-items="courseList" asp-for="CourseId">
+    </select>
+    <span asp-validation-for="CourseId" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label class="form-label" asp-for="Grade"></label>
+    <input asp-for="Grade" class="form-control">
+    <span asp-validation-for="Grade" class="text-danger"></span>
+</div>
+@* <partial name="_ValidationScriptsPartial" /> *@

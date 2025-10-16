@@ -75,7 +75,7 @@ namespace MVCProject.Controllers
 
         public IActionResult Delete(int Id)
         {
-            Instructor Instructor = _InstructorService.GetInstructorById(Id);
+            Instructor? Instructor = _InstructorService.GetInstructorById(Id);
 
             if (Instructor != null)
             {

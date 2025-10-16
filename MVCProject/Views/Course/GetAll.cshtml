@@ -1,0 +1,37 @@
+﻿@using DataAccessLayer.Models
+@model List<Course>
+@{
+    ViewData["Title"] = "GetAll";
+}
+
+<h1 class ="text-center">All Courses</h1>
+
+<a asp-action="Add" asp-controller="Course" class="btn btn-primary btn-lg " style="width: 25%;">Add Course</a>
+<br />
+<br />
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Topic</th>
+        <th>Degree</th>
+        <th>Min Degree</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.Topic</td>
+            <td>@item.Degree</td>
+            <td>@item.MinDegree</td>
+            <td>
+                <a asp-action="GetById" asp-controller="Course" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                <a asp-action="Edit" asp-controller="Course" asp-route-id="@item.Id" class="btn btn-warning">Update Course</a>
+                <a asp-action="Delete" asp-controller="Course" asp-route-id="@item.Id" class="btn btn-danger">Delete Course</a>
+            </td>
+        </tr>
+    }
+</table>
