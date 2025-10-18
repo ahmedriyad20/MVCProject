@@ -1,3 +1,7 @@
+using Microsoft.CodeAnalysis.Elfie.Serialization;
+using MVCProject.Middleware;
+using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
+
 namespace MVCProject
 {
     public class Program
@@ -16,6 +20,24 @@ namespace MVCProject
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            //My Custom LoggingMiddleware
+            app.UseRequestLogging();
+
+
+            //My Custom GlobalExceptionHandlerMiddleware
+
+            // Program.cs
+            // app.UseGlobalExceptionHandler();      // _next will be UseRouting
+            // app.UseRouting();                    // _next will be UseAuthorization
+            //app.UseAuthorization();              // _next will be MapStaticAssets, and so on.
+
+            //The compiler doesn't figure it out - ASP.NET Core's middleware system builds this chain at runtime based on
+            //the order you write in Program.cs.
+
+            app.UseGlobalExceptionHandler();
+
+
             app.UseRouting();
 
             app.UseAuthorization();

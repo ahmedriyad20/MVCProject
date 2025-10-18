@@ -16,6 +16,7 @@
         <th>Image</th>
         <th>Hiring Date</th>
         <th>Actions</th>
+        <th>Courses</th>
     </tr>
     @foreach (var item in Model)
     {
@@ -32,6 +33,7 @@
                 <a asp-action="Edit" asp-controller="Instructor" asp-route-id="@item.Id" class="btn btn-warning">Update Instructor</a>
                 <a asp-action="Delete" asp-controller="Instructor" asp-route-id="@item.Id" class="btn btn-danger">Delete Instructor</a>
             </td>
+            <td><a asp-action="ManageCourses" asp-controller="Instructor" asp-route-id="@item.Id" class="btn btn-info">Manage Courses</a></td>
         </tr>
     }
 </table>

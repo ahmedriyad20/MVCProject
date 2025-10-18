@@ -1,0 +1,27 @@
+﻿@using DataAccessLayer.Models
+@model InstructorCourse
+
+@{
+    SelectList courseList = new SelectList(ViewBag.Courses, "Id", "Name");
+    
+
+    bool isUpdate = Model != null && Model.CourseId > 0;
+        
+         
+}
+
+<div class="mb-3">
+    
+    <label class="form-label">Course</label>
+    <select disabled class="form-control" asp-items="courseList" asp-for="CourseId">
+        <option value="0">-- Select Course --</option>
+    </select>
+    <span asp-validation-for="CourseId" class="text-danger"></span>
+    
+</div>
+
+<div class="mb-3">
+    <label class="form-label" asp-for="RateHour"></label>
+    <input asp-for="RateHour" class="form-control">
+    <span asp-validation-for="RateHour" class="text-danger"></span>
+</div>

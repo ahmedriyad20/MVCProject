@@ -1,0 +1,38 @@
+﻿@using DataAccessLayer.Models
+@model InstructorCourse
+@{
+    ViewData["Title"] = "Update Course";
+    SelectList courseList = new SelectList(ViewBag.Courses, "Id", "Name");
+
+}
+
+<h1>Update Course</h1>
+
+<form asp-action="UpdateCourse" asp-controller="Instructor" method="post">
+    <input type="hidden" asp-for="InstructorId" />
+    <input type="hidden" asp-for="CourseId" />
+    @* <partial name="AddUpdateInstructorCoursePV" /> *@
+    <div class="mb-3">
+
+        <label class="form-label">Course</label>
+        <select disabled class="form-control" asp-items="courseList" asp-for="CourseId">
+            <option value="0">-- Select Course --</option>
+        </select>
+        <span asp-validation-for="CourseId" class="text-danger"></span>
+
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" asp-for="RateHour"></label>
+        <input asp-for="RateHour" class="form-control">
+        <span asp-validation-for="RateHour" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+}

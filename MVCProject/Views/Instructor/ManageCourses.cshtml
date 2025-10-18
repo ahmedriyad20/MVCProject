@@ -1,0 +1,51 @@
+﻿@using DataAccessLayer.Models
+@model Instructor
+@{
+    ViewData["Title"] = "Manage Courses";
+}
+
+<h1>Manage Courses</h1>
+
+<h1 style="margin-left:100px">Instructor Detials</h1>
+<div class="card mb-3" style="max-width: 720px; margin-left:100px;">
+    <div class="row g-0">
+        <div class="col-md-4 d-flex align-items-center justify-content-center p-2">
+            <img src="/Images/@Model.ImageUrl" class="img-fluid rounded" alt="@Model.Name" style="max-height:160px; object-fit:cover;" />
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title mb-1">@Model.Name</h5>
+
+                <ul class="list-unstyled mb-2">
+                    <li><strong>Department Name:</strong> @ViewBag.deptName</li>
+                    <li>
+                        <strong>CourseName & RateHour: </strong>
+                        <ul>
+                            @foreach (var item in ViewBag.Courses as List<InstructorCourse>)
+                            {
+                                <li class="d-flex justify-content-between align-items-center" style="margin-bottom:10px">
+                                    <span>@item.Course.Name => @item.RateHour</span>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="UpdateCourse" asp-controller="Instructor"
+                                           asp-route-instructorId="@item.InstructorId"
+                                           asp-route-courseId="@item.CourseId"
+                                           class="btn btn-light btn-sm btn-outline-dark" style="margin-right:10px">Update Course</a>
+
+                                        <a asp-action="DeleteCourse" asp-controller="Instructor"
+                                           asp-route-instructorId="@item.InstructorId"
+                                           asp-route-courseId="@item.CourseId"
+                                           class="btn btn-danger btn-sm btn-outline-dark" style="color:white" >Delete Course</a>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
+
+                <a asp-action="GetAll" asp-controller="Instructor" class="btn btn-primary btn-outline-dark">Back to list</a>
+                <a asp-action="AddCourse" asp-controller="Instructor" asp-route-id="@Model.Id" class="btn btn-info btn-outline-dark">Add Course</a>
+                
+            </div>
+        </div>
+    </div>
+</div>

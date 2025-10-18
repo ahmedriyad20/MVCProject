@@ -38,7 +38,7 @@ namespace MVCProject.Controllers
         [HttpPost]
         public IActionResult Add(Course Course)
         {
-            if (Course.Name != null)
+            if (ModelState.IsValid)
             {
                 if (_CourseService.AddCourse(Course))
                 {
@@ -59,7 +59,7 @@ namespace MVCProject.Controllers
         [HttpPost]
         public IActionResult Edit(Course Course)
         {
-            if (Course.Name != null)
+            if (ModelState.IsValid)
             {
                 if (_CourseService.UpdateCourse(Course))
                 {

@@ -21,6 +21,14 @@
                     <li><strong>Address:</strong> @Model.Address</li>
                     <li><strong>Hiring Date:</strong> @Model.HiringDate</li>
                     <li><strong>Department Name:</strong> @ViewBag.deptName</li>
+                    <li><strong>CourseName & RateHour: </strong>
+                        <ul>
+                            @foreach (var item in ViewBag.Courses as List<InstructorCourse>)
+                            {
+                                <li>@item.Course.Name => @item.RateHour</li>
+                            }
+                        </ul>    
+                    </li>
                 </ul>
 
                 <a asp-action="GetAll" asp-controller="Instructor" class="btn btn-primary btn-outline-dark">Back to list</a>

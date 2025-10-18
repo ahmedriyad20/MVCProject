@@ -19,7 +19,7 @@ public partial class InstructorCourse
     public float RateHour { get; set; }
 
     //Navigation Property
-    public virtual Course Course { get; set; } = null!;
+    public virtual Course? Course { get; set; } = null!;
 
-    public virtual Instructor Instructor { get; set; } = null!;
+    public virtual Instructor? Instructor { get; set; } = null!;
 }

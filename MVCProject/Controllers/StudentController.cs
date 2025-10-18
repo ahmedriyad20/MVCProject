@@ -46,35 +46,42 @@ namespace MVCProject.Controllers
         {
             if(studentCourse.DepartmentId != 0)
             {
-                if (ModelState.IsValid)
+                if (studentCourse.CourseId != 0)
                 {
-                    StudentService studentService = new StudentService(_Context);
-                    Student student = new Student()
+                    if (ModelState.IsValid)
                     {
-                        Name = studentCourse.Name,
-                        Age = studentCourse.Age,
-                        Address = studentCourse.Address,
-                        ImageURL = studentCourse.ImageURL,
-                        Email = studentCourse.Email,
-                        DepartmentId = studentCourse.DepartmentId
-                    };
-                    bool isAdded = studentService.AddStudent(student);
-                    if (isAdded)
-                    {
-                        // Now add the student course
-                        StudentCourse sc = new StudentCourse()
+                        StudentService studentService = new StudentService(_Context);
+                        Student student = new Student()
                         {
-                            StudentId = student.SSN,
-                            CourseId = (int)studentCourse.CourseId,
-                            Grade = (float)studentCourse.Grade
+                            Name = studentCourse.Name,
+                            Age = studentCourse.Age,
+                            Address = studentCourse.Address,
+                            ImageURL = studentCourse.ImageURL,
+                            Email = studentCourse.Email,
+                            DepartmentId = studentCourse.DepartmentId
                         };
-                        _Context.StudentCourses.Add(sc);
+                        bool isAdded = studentService.AddStudent(student);
+                        if (isAdded)
+                        {
+                            // Now add the student course
+                            StudentCourse sc = new StudentCourse()
+                            {
+                                StudentId = student.SSN,
+                                CourseId = (int)studentCourse.CourseId,
+                                Grade = (float)studentCourse.Grade
+                            };
+                            _Context.StudentCourses.Add(sc);
 
-                        if (_Context.SaveChanges() > 0)
-                            //Student Course added successfully
-                            return RedirectToAction("GetAll");
+                            if (_Context.SaveChanges() > 0)
+                                //Student Course added successfully
+                                return RedirectToAction("GetAll");
+                        }
+
                     }
-
+                }
+                else
+                {
+                    ModelState.AddModelError("CourseId", "The Course field is required.");
                 }
             }
             else
@@ -121,67 +128,74 @@ namespace MVCProject.Controllers
         {
             if(studentCourse.DepartmentId != 0)
             {
-                if (ModelState.IsValid)
+                if(studentCourse.CourseId != 0)
                 {
-                    StudentService studentService = new StudentService(_Context);
-                    Student student = new Student()
+                    if (ModelState.IsValid)
                     {
-                        SSN = studentCourse.SSN,
-                        Name = studentCourse.Name,
-                        Age = studentCourse.Age,
-                        Address = studentCourse.Address,
-                        ImageURL = studentCourse.ImageURL,
-                        Email = studentCourse.Email,
-                        DepartmentId = studentCourse.DepartmentId
-                    };
-
-                    if (studentService.UpdateStudent(student))
-                    {
-                        StudentCourse sc = _Context.StudentCourses.Where(sc => sc.StudentId == student.SSN).FirstOrDefault();
-                        // Now Update the student course if exists
-
-                        #region Very Improtant Note
-                        //if you want to update a record in EF and this record consists of composite key you have to remove
-                        //it from the database first then add it again with the updated values
-                        #endregion
-
-                        if (sc != null)
+                        StudentService studentService = new StudentService(_Context);
+                        Student student = new Student()
                         {
+                            SSN = studentCourse.SSN,
+                            Name = studentCourse.Name,
+                            Age = studentCourse.Age,
+                            Address = studentCourse.Address,
+                            ImageURL = studentCourse.ImageURL,
+                            Email = studentCourse.Email,
+                            DepartmentId = studentCourse.DepartmentId
+                        };
 
-                            _Context.StudentCourses.Remove(sc);
-                            _Context.SaveChanges();
-
-                            StudentCourse newSC = new StudentCourse()
-                            {
-                                StudentId = student.SSN,
-                                CourseId = (int)studentCourse.CourseId,
-                                Grade = (float)studentCourse.Grade
-                            };
-                            
-                            _Context.StudentCourses.Add(newSC);
-
-                            if (_Context.SaveChanges() > 0)
-                                //Student Course updated successfully
-                                return RedirectToAction("GetAll");
-                        }
-                        else
+                        if (studentService.UpdateStudent(student))
                         {
-                            // if not exists Add new student course record
-                            StudentCourse newSC = new StudentCourse()
-                            {
-                                StudentId = student.SSN,
-                                CourseId = (int)studentCourse.CourseId,
-                                Grade = (float)studentCourse.Grade
-                            };
-                            _Context.StudentCourses.Add(newSC);
+                            StudentCourse sc = _Context.StudentCourses.Where(sc => sc.StudentId == student.SSN).FirstOrDefault();
+                            // Now Update the student course if exists
 
-                            if (_Context.SaveChanges() > 0)
-                                //Student Course added successfully
-                                return RedirectToAction("GetAll");
+                            #region Very Improtant Note
+                            //if you want to update a record in EF and this record consists of composite key you have to remove
+                            //it from the database first then add it again with the updated values
+                            #endregion
+
+                            if (sc != null)
+                            {
+
+                                _Context.StudentCourses.Remove(sc);
+                                _Context.SaveChanges();
+
+                                StudentCourse newSC = new StudentCourse()
+                                {
+                                    StudentId = student.SSN,
+                                    CourseId = (int)studentCourse.CourseId,
+                                    Grade = (float)studentCourse.Grade
+                                };
+
+                                _Context.StudentCourses.Add(newSC);
+
+                                if (_Context.SaveChanges() > 0)
+                                    //Student Course updated successfully
+                                    return RedirectToAction("GetAll");
+                            }
+                            else
+                            {
+                                // if not exists Add new student course record
+                                StudentCourse newSC = new StudentCourse()
+                                {
+                                    StudentId = student.SSN,
+                                    CourseId = (int)studentCourse.CourseId,
+                                    Grade = (float)studentCourse.Grade
+                                };
+                                _Context.StudentCourses.Add(newSC);
+
+                                if (_Context.SaveChanges() > 0)
+                                    //Student Course added successfully
+                                    return RedirectToAction("GetAll");
+                            }
+
                         }
-                        
+
                     }
-
+                }
+                else
+                {
+                    ModelState.AddModelError("CourseId", "The Course field is required.");
                 }
             }
             else

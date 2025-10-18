@@ -34,7 +34,7 @@
     <span asp-validation-for="Email" class="text-danger"></span>
 </div>
 <div class="mb-3">
-    <label class="form-label">DepartmentNo.</label>
+    <label class="form-label">Department</label>
     <select class="form-control" asp-items="deptList" asp-for="DepartmentId">
         <option value="0">-- Select Department --</option>
     </select>
@@ -43,6 +43,7 @@
 <div class="mb-3">
     <label class="form-label">Course Name.</label>
     <select class="form-control" asp-items="courseList" asp-for="CourseId">
+        <option value="0">-- Select Course --</option>
     </select>
     <span asp-validation-for="CourseId" class="text-danger"></span>
 </div>

@@ -37,8 +37,9 @@
     <span asp-validation-for="HiringDate" class="text-danger"></span>
 </div>
 <div class="mb-3">
-    <label class="form-label">DepartmentNo.</label>
+    <label class="form-label">Department</label>
     <select class="form-control" asp-items="deptList" asp-for="DepartmentId">
+        <option value="0">-- Select Department --</option>
     </select>
     <span asp-validation-for="DepartmentId" class="text-danger"></span>
 </div>

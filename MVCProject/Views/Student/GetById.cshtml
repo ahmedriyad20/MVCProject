@@ -22,7 +22,7 @@
                     <ul>
                             @foreach (var item in ViewBag.StudentCourses as List<StudentCourse>)
                         {
-                            <p>@item.Course.Name => @item.Grade</p>
+                            <li>@item.Course.Name => @item.Grade</li>
                         }
                         </ul>
                     </li>

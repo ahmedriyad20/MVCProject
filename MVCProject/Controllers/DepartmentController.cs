@@ -53,7 +53,7 @@ namespace MVCProject.Controllers
         [HttpPost]
         public IActionResult AddDepartment(DepartmentBranch department)
         {
-            if(department.Name != null)
+            if(ModelState.IsValid)
             {
                 if (_DepartmentService.AddDepartment(department))
                 {
@@ -74,7 +74,7 @@ namespace MVCProject.Controllers
         [HttpPost]
         public IActionResult Edit(DepartmentBranch department)
         {
-            if(department.Name != null)
+            if(ModelState.IsValid)
             {
                 if(_DepartmentService.UpdateDepartment(department))
                 {
