@@ -1,0 +1,24 @@
+﻿@using DataAccessLayer.Models
+@using DataAccessLayer.ViewModel
+@model DepartmentBranch
+@{
+    ViewData["Title"] = "Add Department";
+}
+
+<h1>Add Department</h1>
+
+<form asp-action="AddV2" asp-controller="Department" method="post">
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-info">@ViewBag.Message</div>
+    }
+
+    <partial name="AddEditDepartmentPartialView" />
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+}

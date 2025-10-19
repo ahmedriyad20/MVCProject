@@ -3,6 +3,7 @@ using DataAccessLayer.Context;
 using DataAccessLayer.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MVCProject.Filters;
 
 namespace MVCProject.Controllers
 {
@@ -16,12 +17,19 @@ namespace MVCProject.Controllers
             _InstructorService = new InstructorService(_Context);
         }
 
+        [Route("Instructors/All")]
+        [ExceptionHandleFilter]
+        [ResourceFilter("instructors-list", 60)]
         public IActionResult GetAll()
         {
+            //throw new Exception("Test exception to verify ExceptionHandleFilter");
+
             var Instructors = _InstructorService.GetAllInstructors();
             return View("GetAll", Instructors);
         }
 
+        [Route("Instructors/{id:int:min(1)}")]
+        [AuthorizationFilter(false)]
         public IActionResult GetById(int Id)
         {
             var Instructor = _InstructorService.GetInstructorById(Id);
@@ -30,11 +38,12 @@ namespace MVCProject.Controllers
             return View("GetById", Instructor);
         }
 
+        
         [HttpGet]
         public IActionResult Add()
         {
             ViewBag.Departments = _Context.Departments.ToList();
-            return View("Add2");
+            return View("Add");
         }
 
         [HttpPost]
@@ -68,6 +77,7 @@ namespace MVCProject.Controllers
             return View("Edit", instructor);
         }
 
+        [EditInstructorResultFilter]
         [HttpPost]
         public IActionResult Edit(Instructor instructor)
         {

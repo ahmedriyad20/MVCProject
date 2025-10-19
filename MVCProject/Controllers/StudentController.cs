@@ -14,6 +14,9 @@ namespace MVCProject.Controllers
         {
             _Context = new UniversityContext();
         }
+
+        [Route("Students/All")]
+        [Route("Students")]
         public IActionResult GetAll()
         {
             StudentService studentService = new StudentService(_Context);
@@ -22,6 +25,7 @@ namespace MVCProject.Controllers
             return View("GetAll", students);
         }
 
+        [Route("Students/{Id}")]
         public IActionResult GetById(int Id)
         {
             StudentService studentService = new StudentService(_Context);

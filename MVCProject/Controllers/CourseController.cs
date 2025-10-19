@@ -15,12 +15,15 @@ namespace MVCProject.Controllers
             _CourseService = new CourseService(_Context);
         }
 
+        [Route("Courses/All")]
+        [Route("Courses")]
         public IActionResult GetAll()
         {
             var Courses = _CourseService.GetAllCourses();
             return View("GetAll", Courses);
         }
 
+        [Route("Courses/{id:int:min(1)}")]
         public IActionResult GetById(int Id)
         {
             var Course = _CourseService.GetCourseById(Id);

@@ -5,5 +5,11 @@ namespace MVCProject.Models
         public string? RequestId { get; set; }
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+
+        public string? StatusCode { get; set; }
+
+        public string? Title { get; set; }
+
+        public string? Message { get; set; }
     }
 }

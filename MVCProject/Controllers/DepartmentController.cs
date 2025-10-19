@@ -3,6 +3,7 @@ using DataAccessLayer.Context;
 using DataAccessLayer.Models;
 using DataAccessLayer.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using MVCProject.Filters;
 
 namespace MVCProject.Controllers
 {
@@ -15,6 +16,8 @@ namespace MVCProject.Controllers
             _Context = new UniversityContext();
             _DepartmentService = new DepartmentService(_Context);
         }
+
+        [Route("Departments/All")]
         public IActionResult GetAll()
         {
             List<Department> Departments = _DepartmentService.GetAllDepartments();
@@ -22,6 +25,7 @@ namespace MVCProject.Controllers
             return View("GetAll", Departments);
         }
 
+        [Route("Departments/{id:int:min(1)}")]
         public IActionResult GetById(int Id)
         {
             DepartmentBranch deptBranch = _DepartmentService.GetDepartmentById(Id);
@@ -37,6 +41,7 @@ namespace MVCProject.Controllers
             return View("GetById", Department);
         }
 
+        //Route Configuration is in Program.cs
         public IActionResult GetByName(string Name)
         {
             Department Department = _DepartmentService.GetDepartmentByName(Name);
@@ -62,6 +67,27 @@ namespace MVCProject.Controllers
             }
 
             return View("Add", department);
+        }
+
+        [HttpGet]
+        public IActionResult AddV2()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [DepartmentLocationActionFilter]
+        public IActionResult AddV2(DepartmentBranch department)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_DepartmentService.AddDepartment(department))
+                {
+                    return RedirectToAction("GetAll");
+                }
+            }
+
+            return View("AddV2", department);
         }
 
         [HttpGet]

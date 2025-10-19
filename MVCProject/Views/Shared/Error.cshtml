@@ -3,7 +3,7 @@
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
+@* <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
 @if (Model.ShowRequestId)
@@ -22,4 +22,68 @@
     It can result in displaying sensitive information from exceptions to end users.
     For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
     and restarting the app.
-</p>
+</p> *@
+
+
+@{
+    // If your model is null, provide safe defaults:
+    // var status =  "Error";
+    // var title =  "Something went wrong";
+    // var message = "An unexpected error occurred. Please try again later.";
+    // var requestId = Model?.RequestId;
+
+    var status = Model?.StatusCode?.ToString() ?? "Error";
+    var title = !string.IsNullOrEmpty(Model?.Title) ? Model.Title : "Something went wrong";
+    var message = !string.IsNullOrEmpty(Model?.Message) ? Model.Message : "An unexpected error occurred. Please try again later.";
+    var requestId = Model?.RequestId;
+}
+
+<div class="container">
+    <div class="card shadow-sm error-card">
+        <div class="row g-0 align-items-center">
+            <div class="col-md-5 p-4 text-center bg-gradient" style="background: linear-gradient(135deg,#f8f9fa,#e9ecef);">
+                <div class="big-code text-danger">@status</div>
+                <h3 class="mt-2">@title</h3>
+                <p class="muted-tiny">Request ID: <code>@requestId</code></p>
+            </div>
+
+            <div class="col-md-7 p-4">
+                <div class="card-body">
+                    <p class="lead">@message</p>
+
+                    <ul class="list-unstyled">
+                        <li><strong>Possible actions:</strong></li>
+                        <li class="mt-2">• Click <strong>Retry</strong> to attempt the action again.</li>
+                        <li>• Go back to <a href="~/">Home</a>.</li>
+                        <li>• Contact support if the issue persists.</li>
+                    </ul>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <a href="javascript:location.reload()" class="btn btn-primary">Retry</a>
+                        <a href="~/" class="btn btn-outline-secondary">Home</a>
+                        <a href="mailto:support@yourdomain.com?subject=Error%20Report%20(@status)&body=Request%20Id:%20@requestId%0D%0A" class="btn btn-outline-danger">Contact Support</a>
+                    </div>
+
+                    <hr>
+
+                    <details class="mt-3">
+                        <summary class="small">Technical details (expand)</summary>
+                        <pre class="small mt-2" style="white-space:pre-wrap; background:#f8f9fa; padding:10px; border-radius:6px;">
+                            Status: @status
+                            Title: @title
+                            Message: @message
+                            RequestId: @requestId
+                        </pre>
+                    </details>
+
+                    <p class="text-muted small mt-3">If you are a developer: check the server logs for the Request ID above to find the exception trace.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!------------------------------------------------------->
+
+
+

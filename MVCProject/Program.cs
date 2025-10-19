@@ -1,4 +1,5 @@
 using Microsoft.CodeAnalysis.Elfie.Serialization;
+using MVCProject.Filters;
 using MVCProject.Middleware;
 using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 
@@ -10,8 +11,15 @@ namespace MVCProject
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add Memory Cache service
+            builder.Services.AddMemoryCache();
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            //builder.Services.AddControllersWithViews(op =>
+            //{
+            //    op.Filters.Add<ExceptionHandleFilter>();
+            //});
 
             var app = builder.Build();
 
@@ -22,7 +30,7 @@ namespace MVCProject
             }
 
             //My Custom LoggingMiddleware
-            app.UseRequestLogging();
+            //app.UseRequestLogging();
 
 
             //My Custom GlobalExceptionHandlerMiddleware
@@ -35,7 +43,7 @@ namespace MVCProject
             //The compiler doesn't figure it out - ASP.NET Core's middleware system builds this chain at runtime based on
             //the order you write in Program.cs.
 
-            app.UseGlobalExceptionHandler();
+            //app.UseGlobalExceptionHandler();
 
 
             app.UseRouting();
@@ -43,6 +51,24 @@ namespace MVCProject
             app.UseAuthorization();
 
             app.MapStaticAssets();
+
+            // Custom route for Students/All
+            app.MapControllerRoute(
+                name: "AllStudents",
+                pattern: "Students/All",
+                defaults: new { controller = "Student", action = "GetAll" });
+
+            // Custom route for Student/Details/{id}
+            app.MapControllerRoute(
+                name: "StudentDetails",
+                pattern: "Student/Details/{id:int:min(1)}",
+                defaults: new { controller = "Student", action = "GetById" });
+
+            app.MapControllerRoute(
+                name: "Department/Details",
+                pattern: "Department/Details/{deptName:alpha:minlength(2):maxlength(30)}",
+                defaults: new { controller = "Department", action = "GetByName" });
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
