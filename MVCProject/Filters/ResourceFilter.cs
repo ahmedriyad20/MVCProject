@@ -28,14 +28,14 @@ namespace MVCProject.Filters
             
             if (cache.TryGetValue(cacheKey, out IActionResult cachedResult))
             {
-                Console.WriteLine($"✅ Returning cached response for: {cacheKey}");
+                Console.WriteLine($" Returning cached response for: {cacheKey}");
                 
                 // Short-circuit the pipeline - return cached result
                 context.Result = cachedResult;
             }
             else
             {
-                Console.WriteLine($"🔄 Cache miss for: {cacheKey}");
+                Console.WriteLine($" Cache miss for: {cacheKey}");
             }
         }
 
@@ -52,7 +52,7 @@ namespace MVCProject.Filters
             // Store result in cache
             cache.Set(cacheKey, context.Result, TimeSpan.FromSeconds(_cacheDurationSeconds));
             
-            Console.WriteLine($"💾 Cached response for: {cacheKey} (expires in {_cacheDurationSeconds}s)");
+            Console.WriteLine($" Cached response for: {cacheKey} (expires in {_cacheDurationSeconds}s)");
         }
     }
 }

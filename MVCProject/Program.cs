@@ -1,4 +1,8 @@
+using BusinessLogicLayer.IService;
+using BusinessLogicLayer.Service;
+using DataAccessLayer.Context;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
+using Microsoft.EntityFrameworkCore;
 using MVCProject.Filters;
 using MVCProject.Middleware;
 using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
@@ -16,10 +20,24 @@ namespace MVCProject
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //If you want to use a custom Exception Handling Filter 
             //builder.Services.AddControllersWithViews(op =>
             //{
             //    op.Filters.Add<ExceptionHandleFilter>();
             //});
+
+            //Database Context Configuration and injecting it to the DI Container
+            builder.Services.AddDbContext<UniversityContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("UniversityDBConnectionString"));
+            });
+
+            //Dependency Injection for Service Layer
+            builder.Services.AddScoped<IStudentService, StudentService>();
+            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            builder.Services.AddScoped<ICourseService, CourseService>();
+            builder.Services.AddScoped<IInstructorService, InstructorService>();
 
             var app = builder.Build();
 

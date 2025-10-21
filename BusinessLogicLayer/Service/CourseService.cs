@@ -1,5 +1,7 @@
-﻿using DataAccessLayer.Context;
+﻿using BusinessLogicLayer.IService;
+using DataAccessLayer.Context;
 using DataAccessLayer.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,34 +10,52 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.Service
 {
-    public class CourseService
+    public class CourseService : ICourseService
     {
-        public readonly UniversityContext _context;
+        public readonly UniversityContext _Context;
         public CourseService(UniversityContext context)
         {
-            _context = context;
+            _Context = context;
         }
 
-        public List<Course> GetAllCourses() => _context.Courses.ToList();
+        public List<Course> GetAllCourses() => _Context.Courses.ToList();
 
-        public Course? GetCourseById(int Id) => _context.Courses.FirstOrDefault(s => s.Id == Id);
+        public Course? GetCourseById(int Id) => _Context.Courses.FirstOrDefault(s => s.Id == Id);
 
         public bool AddCourse(Course Course)
         {
-            _context.Courses.Add(Course);
-            return _context.SaveChanges() > 0;
+            _Context.Courses.Add(Course);
+            return _Context.SaveChanges() > 0;
         }
 
         public bool UpdateCourse(Course Course)
         {
 
-            _context.Courses.Update(Course);
-            if (_context.SaveChanges() > 0)
+            _Context.Courses.Update(Course);
+            if (_Context.SaveChanges() > 0)
             {
                 return true;
             }
             else
                 return false;
+        }
+
+        public bool DeleteCourse(Course Course)
+        {
+            _Context.Courses.Remove(Course);
+            return _Context.SaveChanges() > 0;
+        }
+
+        ////////////////////////////////////////// Student,Instructor-Course Management Section //////////////////////////////////////////
+
+        public List<Student> GetAllStudentsByCourseId(int CourseId)
+        {
+            return _Context.Students.Where(s => s.StudentCourses.Any(sc => sc.CourseId == CourseId)).ToList();
+        }
+
+        public List<Instructor> GetAllInstructorsByCourseId(int CourseId)
+        {
+            return _Context.Instructors.Where(i => i.InstructorCourses.Any(ic => ic.CourseId == CourseId)).ToList();
         }
     }
 }

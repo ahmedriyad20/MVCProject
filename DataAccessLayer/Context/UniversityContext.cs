@@ -18,9 +18,19 @@ public class UniversityContext : DbContext
     public virtual DbSet<InstructorCourse> InstructorCourses { get; set; }
     public virtual DbSet<Branch> Branches { get; set; }
 
+    public UniversityContext(DbContextOptions dbContextOptions): base(dbContextOptions)
+    {
+        
+    }
+
+    public UniversityContext()
+    {
+
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Data Source =.; Initial Catalog = MVCProjectDB; Integrated Security = True; Encrypt = False");
+        //optionsBuilder.UseSqlServer("Data Source =.; Initial Catalog = MVCProjectDB; Integrated Security = True; Encrypt = False");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

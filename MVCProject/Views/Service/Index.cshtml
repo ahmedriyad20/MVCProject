@@ -1,0 +1,8 @@
+﻿@using BusinessLogicLayer.IService;
+@inject IDepartmentService DepartmentService;
+
+
+<h2>  From CTOR =>   @ViewBag.deptFromCTOR.GetHashCode() </h2>
+<h2>  From View =>   @DepartmentService.GetHashCode() </h2>
+
+<h2>From Action =>  @ViewBag.deptFromAction.GetHashCode() </h2>

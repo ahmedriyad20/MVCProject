@@ -1,4 +1,5 @@
-﻿using DataAccessLayer.Context;
+﻿using BusinessLogicLayer.IService;
+using DataAccessLayer.Context;
 using DataAccessLayer.Models;
 using DataAccessLayer.ViewModel;
 using Microsoft.EntityFrameworkCore;
@@ -10,43 +11,63 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.Service
 {
-    public class DepartmentService
+    public class DepartmentService : IDepartmentService
     {
-        private readonly UniversityContext _context;
+        private readonly UniversityContext _Context;
+
         public DepartmentService(UniversityContext context)
         {
-            _context = context;
+            _Context = context;
         }
+
         public  List<Department> GetAllDepartments()
         {
-            List<Department> Departments = _context.Departments.Include(d => d.Branches).ToList();
+            List<Department> Departments = _Context.Departments.Include(d => d.Branches).ToList();
 
             return Departments;
         }
 
         public List<Branch> GetAllDepartmentBranches(int departmentId)
         {
-            return _context.Branches.Where(b => b.DepartmentId == departmentId).ToList();
+            return _Context.Branches.Where(b => b.DepartmentId == departmentId).ToList();
         }
-        public  DepartmentBranch GetDepartmentById(int Id)
+
+        public Department GetDepartmentById(int Id)
         {
-            Department? Department = _context.Departments.Include(d => d.Branches).FirstOrDefault(d => d.Id == Id);
-            //List<Branch>? branch = _context.Branches.Where(b => b.DepartmentId == Id).ToList(); //will return all branches for the department
-            Branch? branch = _context.Branches.FirstOrDefault(b => b.DepartmentId == Id);
-            DepartmentBranch deptBranch = new DepartmentBranch()
+            return _Context.Departments.FirstOrDefault(d => d.Id == Id);
+        }
+
+        public  DepartmentBranch GetDepartmentBranchById(int Id)
+        {
+            Department? Department = _Context.Departments.Include(d => d.Branches).FirstOrDefault(d => d.Id == Id);
+            Branch? branch = _Context.Branches.FirstOrDefault(b => b.DepartmentId == Id);
+            DepartmentBranch deptBranch = new DepartmentBranch();
+
+            // Fix CS8602: Check for null before dereferencing
+            if (Department != null)
             {
-                DepartmentId = Department.Id,
-                Name = Department.Name,
-                ManagerName = Department.ManagerName,
-                Location = Department.Location,
-                BranchName = branch.BranchName // Assuming one branch per department for simplicity
-            };
+                deptBranch.DepartmentId = Department.Id; // Fix CS0019: Remove '?? 0', since Id is not nullable
+                deptBranch.Name = Department.Name;
+                deptBranch.ManagerName = Department.ManagerName;
+                deptBranch.Location = Department.Location;
+            }
+            else
+            {
+                deptBranch.DepartmentId = 0;
+                deptBranch.Name = string.Empty;
+                deptBranch.ManagerName = null;
+                deptBranch.Location = null;
+            }
+
+            // Assuming one branch per department for simplicity
+            deptBranch.BranchName = branch != null ? branch.BranchName : default;
+
             return deptBranch;
         }
 
         public  Department GetDepartmentByName(string Name)
         {
-            Department? Department = _context.Departments.Include(d => d.Branches).FirstOrDefault(d => d.Name == Name);
+            Department? Department = _Context.Departments.Include(d => d.Branches).FirstOrDefault(d => d.Name == Name);
 
             return Department;
         }
@@ -60,9 +81,9 @@ namespace BusinessLogicLayer.Service
                 Location = department.Location
             };
 
-            _context.Departments.Add(dept);
+            _Context.Departments.Add(dept);
 
-            if(_context.SaveChanges() > 0)
+            if(_Context.SaveChanges() > 0)
             {
                 //will only add the branch if the department is added successfully
                 Branch branch = new Branch()
@@ -70,9 +91,9 @@ namespace BusinessLogicLayer.Service
                     BranchName = department.BranchName,
                     DepartmentId = dept.Id
                 };
-                _context.Branches.Add(branch);
+                _Context.Branches.Add(branch);
 
-                if(_context.SaveChanges() > 0)
+                if(_Context.SaveChanges() > 0)
                 {
                     return true;
                 }
@@ -90,22 +111,40 @@ namespace BusinessLogicLayer.Service
                 ManagerName = department.ManagerName,
                 Location = department.Location
             };
-            _context.Departments.Update(dept);
-            if (_context.SaveChanges() > 0)
+            _Context.Departments.Update(dept);
+            if (_Context.SaveChanges() > 0)
             {
                 //will only update the branch if the department is updated successfully
-                Branch branch = _context.Branches.FirstOrDefault(b => b.DepartmentId == dept.Id);
+                Branch branch = _Context.Branches.FirstOrDefault(b => b.DepartmentId == dept.Id);
                 if(branch != null)
                 {
                     branch.BranchName = department.BranchName;
-                    _context.Branches.Update(branch);
-                    if (_context.SaveChanges() > 0)
+                    _Context.Branches.Update(branch);
+                    if (_Context.SaveChanges() > 0)
                     {
                         return true;
                     }
                 }
             }
             return false;
+        }
+
+        public bool DeleteDepartment(Department department)
+        {
+            _Context.Departments.Update(department);
+            return _Context.SaveChanges() > 0;
+        }
+
+        public bool DeleteAllDepartmentBranches(int DepartmentId)
+        {
+            List<Branch> branches = GetAllDepartmentBranches(DepartmentId);
+
+            foreach (var branch in branches)
+            {
+                _Context.Branches.Remove(branch);
+            }
+
+            return _Context.SaveChanges() > 0;
         }
     }
 }

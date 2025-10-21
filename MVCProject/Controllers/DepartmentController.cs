@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.Service;
+﻿using BusinessLogicLayer.IService;
+using BusinessLogicLayer.Service;
 using DataAccessLayer.Context;
 using DataAccessLayer.Models;
 using DataAccessLayer.ViewModel;
@@ -9,12 +10,11 @@ namespace MVCProject.Controllers
 {
     public class DepartmentController : Controller
     {
-        private readonly UniversityContext _Context;
-        private readonly DepartmentService _DepartmentService;
-        public DepartmentController()
+        private readonly IDepartmentService _DepartmentService;
+
+        public DepartmentController(IDepartmentService departmentService)
         {
-            _Context = new UniversityContext();
-            _DepartmentService = new DepartmentService(_Context);
+            _DepartmentService = departmentService;
         }
 
         [Route("Departments/All")]
@@ -28,7 +28,7 @@ namespace MVCProject.Controllers
         [Route("Departments/{id:int:min(1)}")]
         public IActionResult GetById(int Id)
         {
-            DepartmentBranch deptBranch = _DepartmentService.GetDepartmentById(Id);
+            DepartmentBranch deptBranch = _DepartmentService.GetDepartmentBranchById(Id);
             Department Department = new Department()
             {
                 Id = deptBranch.DepartmentId,
@@ -93,7 +93,7 @@ namespace MVCProject.Controllers
         [HttpGet]
         public IActionResult Edit(int Id)
         {
-            DepartmentBranch Department = _DepartmentService.GetDepartmentById(Id);
+            DepartmentBranch Department = _DepartmentService.GetDepartmentBranchById(Id);
             return View("Edit", Department);
         }
 
@@ -113,22 +113,15 @@ namespace MVCProject.Controllers
 
         public IActionResult Delete(int Id)
         {
-            List<Branch> branches = _DepartmentService.GetAllDepartmentBranches(Id);
+            _DepartmentService.DeleteAllDepartmentBranches(Id);
+            //if (!_DepartmentService.DeleteAllDepartmentBranches(Id))
+            //    return RedirectToAction("GetAll");
 
-            foreach(var branch in branches)
-            {
-                _Context.Branches.Remove(branch);
-            }
-
-            if(_Context.SaveChanges() <= 0)
-                return RedirectToAction("GetAll");
-
-            Department? department = _Context.Departments.FirstOrDefault(d => d.Id == Id);
+            Department? department = _DepartmentService.GetDepartmentById(Id);
 
             if (department != null)
             {
-                _Context.Departments.Remove(department);
-                if (_Context.SaveChanges() > 0)
+                if (_DepartmentService.DeleteDepartment(department))
                 {
                     return RedirectToAction("GetAll");
                 }

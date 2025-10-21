@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.Service;
+﻿using BusinessLogicLayer.IService;
+using BusinessLogicLayer.Service;
 using DataAccessLayer.Context;
 using DataAccessLayer.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -7,12 +8,11 @@ namespace MVCProject.Controllers
 {
     public class CourseController : Controller
     {
-        private readonly UniversityContext _Context;
-        private readonly CourseService _CourseService;
-        public CourseController()
+        private ICourseService _CourseService;
+
+        public CourseController(ICourseService courseService)
         {
-            _Context = new UniversityContext();
-            _CourseService = new CourseService(_Context);
+            _CourseService = courseService;
         }
 
         [Route("Courses/All")]
@@ -27,8 +27,8 @@ namespace MVCProject.Controllers
         public IActionResult GetById(int Id)
         {
             var Course = _CourseService.GetCourseById(Id);
-            ViewBag.Students = _Context.Students.Where(s => s.StudentCourses.Any(sc => sc.CourseId == Id)).ToList();
-            ViewBag.Instructors = _Context.Instructors.Where(i => i.InstructorCourses.Any(ic => ic.CourseId == Id)).ToList();
+            ViewBag.Students = _CourseService.GetAllStudentsByCourseId(Id);
+            ViewBag.Instructors = _CourseService.GetAllInstructorsByCourseId(Id);
             return View("GetById", Course);
         }
 
@@ -79,8 +79,7 @@ namespace MVCProject.Controllers
 
             if (Course != null)
             {
-                _Context.Courses.Remove(Course);
-                if (_Context.SaveChanges() > 0)
+                if (_CourseService.DeleteCourse(Course))
                 {
                     return RedirectToAction("GetAll");
                 }

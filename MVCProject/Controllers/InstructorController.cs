@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.Service;
+﻿using BusinessLogicLayer.IService;
+using BusinessLogicLayer.Service;
 using DataAccessLayer.Context;
 using DataAccessLayer.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +10,17 @@ namespace MVCProject.Controllers
 {
     public class InstructorController : Controller
     {
-        private readonly UniversityContext _Context;
-        private readonly InstructorService _InstructorService;
-        public InstructorController()
+        // Access to the DbContext
+        private IInstructorService _InstructorService;
+        private IDepartmentService _DepartmentService;
+        private ICourseService _CourseService;
+
+
+        public InstructorController(IInstructorService instructorService, IDepartmentService departmentService, ICourseService courseService)
         {
-            _Context = new UniversityContext();
-            _InstructorService = new InstructorService(_Context);
+            _InstructorService = instructorService;
+            _DepartmentService = departmentService;
+            _CourseService = courseService;
         }
 
         [Route("Instructors/All")]
@@ -33,8 +39,8 @@ namespace MVCProject.Controllers
         public IActionResult GetById(int Id)
         {
             var Instructor = _InstructorService.GetInstructorById(Id);
-            ViewBag.deptName = _Context.Departments.FirstOrDefault(d => d.Id == Instructor.DepartmentId)?.Name;
-            ViewBag.Courses = _Context.InstructorCourses.Include(ic => ic.Course).Where(ic => ic.InstructorId == Id).ToList();
+            ViewBag.deptName = _DepartmentService.GetDepartmentById((int)Instructor.DepartmentId).Name;
+            ViewBag.Courses = _InstructorService.GetAllInstructorCourses(Id);
             return View("GetById", Instructor);
         }
 
@@ -42,7 +48,7 @@ namespace MVCProject.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            ViewBag.Departments = _Context.Departments.ToList();
+            ViewBag.Departments = _DepartmentService.GetAllDepartments();
             return View("Add");
         }
 
@@ -65,7 +71,7 @@ namespace MVCProject.Controllers
             }
 
 
-            ViewBag.Departments = _Context.Departments.ToList();
+            ViewBag.Departments = _DepartmentService.GetAllDepartments();
             return View("Add", instructor);
         }
 
@@ -73,7 +79,7 @@ namespace MVCProject.Controllers
         public IActionResult Edit(int Id)
         {
             var instructor = _InstructorService.GetInstructorById(Id);
-            ViewBag.Departments = _Context.Departments.ToList();
+            ViewBag.Departments = _DepartmentService.GetAllDepartments();
             return View("Edit", instructor);
         }
 
@@ -93,7 +99,7 @@ namespace MVCProject.Controllers
                 }
             }
 
-            ViewBag.Departments = _Context.Departments.ToList();
+            ViewBag.Departments = _DepartmentService.GetAllDepartments();
             return View("Edit", instructor);
         }
 
@@ -103,8 +109,7 @@ namespace MVCProject.Controllers
 
             if (Instructor != null)
             {
-                _Context.Instructors.Remove(Instructor);
-                if (_Context.SaveChanges() > 0)
+                if (_InstructorService.DeleteInstructor(Id))
                 {
                     return RedirectToAction("GetAll");
                 }
@@ -113,17 +118,19 @@ namespace MVCProject.Controllers
             return View("GetAll");
         }
 
+        ////////////////////////////////////////// Instructor-Course Management Section //////////////////////////////////////////
+
         public IActionResult ManageCourses(int Id)
         {
             var instructor = _InstructorService.GetInstructorById(Id);
-            ViewBag.Courses = _Context.InstructorCourses.Include(ic => ic.Course).Where(ic => ic.InstructorId == Id).ToList();
+            ViewBag.Courses = _InstructorService.GetAllInstructorCourses(Id);
             return View(instructor);
         }
 
         [HttpGet]
         public IActionResult AddCourse(int Id)
         {
-            ViewBag.Courses = _Context.Courses.ToList();
+            ViewBag.Courses = _CourseService.GetAllCourses();
             ViewBag.InstructorId = Id;
             InstructorCourse instructorCourse = new InstructorCourse();
             instructorCourse.InstructorId = Id;
@@ -140,23 +147,22 @@ namespace MVCProject.Controllers
 
             if (ModelState.IsValid)
             {
-                _Context.InstructorCourses.Add(instructorCourse);
-                if (_Context.SaveChanges() > 0)
+                if (_InstructorService.AddInstructorCourse(instructorCourse))
                 {
                     return RedirectToAction("ManageCourses", new { Id = instructorCourse.InstructorId });
                 }
                     //return RedirectToAction("ManageCourses");
             }
 
-            ViewBag.Courses = _Context.Courses.ToList();
+            ViewBag.Courses = _CourseService.GetAllCourses();
             return View("AddCourse", instructorCourse);
         }
 
         [HttpGet]
         public IActionResult UpdateCourse(int InstructorId, int CourseId)
         {
-            InstructorCourse? instructorCourse = _Context.InstructorCourses.FirstOrDefault(ic => ic.InstructorId == InstructorId && ic.CourseId == CourseId);
-            ViewBag.Courses = _Context.Courses.ToList();
+            InstructorCourse? instructorCourse = _InstructorService.GetInstructorCourse(InstructorId, CourseId);
+            ViewBag.Courses = _CourseService.GetAllCourses();
             return View(instructorCourse);
         }
 
@@ -165,22 +171,20 @@ namespace MVCProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                _Context.InstructorCourses.Update(instructorCourse);
-                if (_Context.SaveChanges() > 0)
+                if (_InstructorService.UpdateInstructorCourse(instructorCourse))
                     return RedirectToAction("ManageCourses", new { Id = instructorCourse.InstructorId });
             }
 
-            ViewBag.Courses = _Context.Courses.ToList();
+            ViewBag.Courses = _CourseService.GetAllCourses();
             return View("UpdateCourse", instructorCourse);
         }
 
         public IActionResult DeleteCourse(int InstructorId, int CourseId)
         {
-            InstructorCourse? instructorCourse = _Context.InstructorCourses.FirstOrDefault(ic => ic.InstructorId == InstructorId && ic.CourseId == CourseId);
+            InstructorCourse? instructorCourse = _InstructorService.GetInstructorCourse(InstructorId, CourseId);
             if (instructorCourse != null)
             {
-                _Context.InstructorCourses.Remove(instructorCourse);
-                if (_Context.SaveChanges() > 0)
+                if (_InstructorService.DeleteInstructorCourse(instructorCourse))
                     return RedirectToAction("ManageCourses", new { Id = InstructorId });
             }
             return View("ManageCourses");

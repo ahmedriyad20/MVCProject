@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.Service;
+﻿using BusinessLogicLayer.IService;
+using BusinessLogicLayer.Service;
 using DataAccessLayer.Context;
 using DataAccessLayer.Models;
 using DataAccessLayer.ViewModel;
@@ -9,103 +10,97 @@ namespace MVCProject.Controllers
 {
     public class StudentController : Controller
     {
-        private readonly UniversityContext _Context;
-        public StudentController()
+        //Prepare the Service Layer Object
+        private IStudentService _StudentService;
+        private IDepartmentService _DepartmentService;
+        private ICourseService _CourseService;
+
+        public StudentController(IStudentService studentService, IDepartmentService departmentService, ICourseService courseService)
         {
-            _Context = new UniversityContext();
+            _StudentService = studentService;
+            _DepartmentService = departmentService;
+            _CourseService = courseService;
         }
 
         [Route("Students/All")]
         [Route("Students")]
         public IActionResult GetAll()
         {
-            StudentService studentService = new StudentService(_Context);
-            List<Student> students = studentService.GetAllStudents();
-            //ViewBag.Courses = _Context.Courses.Where(c => c.StudentCourses.Any(sc => students.Any(s => s.SSN == sc.StudentId))).ToList();
+            List<Student> students = _StudentService.GetAllStudents();
             return View("GetAll", students);
         }
 
         [Route("Students/{Id}")]
         public IActionResult GetById(int Id)
         {
-            StudentService studentService = new StudentService(_Context);
-            Student? student = studentService.GetStudentById(Id);
-            //ViewBag.Courses = _Context.Courses.Where(c => c.StudentCourses.Any(sc => sc.StudentId == Id)).ToList();
-            ViewBag.StudentCourses = _Context.StudentCourses.Include(sc => sc.Course).Where(sc => sc.StudentId == Id).ToList();
+            Student? student = _StudentService.GetStudentById(Id);
+            ViewBag.StudentCourses = _StudentService.GetAllStudentCourses(Id);
             return View("GetById", student);
         }
 
         [HttpGet]
         public IActionResult Add()
         {
-            DepartmentService departmentService = new DepartmentService(_Context);
-            List<Department> departments = departmentService.GetAllDepartments();
+            List<Department> departments = _DepartmentService.GetAllDepartments();
             ViewBag.Departments = departments;
-            ViewBag.Courses = _Context.Courses.ToList();
+            ViewBag.Courses = _CourseService.GetAllCourses();
             return View("Add");
         }
 
         [HttpPost]
         public IActionResult Add(StudentCourseViewModel studentCourse)
         {
-            if(studentCourse.DepartmentId != 0)
-            {
-                if (studentCourse.CourseId != 0)
-                {
-                    if (ModelState.IsValid)
-                    {
-                        StudentService studentService = new StudentService(_Context);
-                        Student student = new Student()
-                        {
-                            Name = studentCourse.Name,
-                            Age = studentCourse.Age,
-                            Address = studentCourse.Address,
-                            ImageURL = studentCourse.ImageURL,
-                            Email = studentCourse.Email,
-                            DepartmentId = studentCourse.DepartmentId
-                        };
-                        bool isAdded = studentService.AddStudent(student);
-                        if (isAdded)
-                        {
-                            // Now add the student course
-                            StudentCourse sc = new StudentCourse()
-                            {
-                                StudentId = student.SSN,
-                                CourseId = (int)studentCourse.CourseId,
-                                Grade = (float)studentCourse.Grade
-                            };
-                            _Context.StudentCourses.Add(sc);
-
-                            if (_Context.SaveChanges() > 0)
-                                //Student Course added successfully
-                                return RedirectToAction("GetAll");
-                        }
-
-                    }
-                }
-                else
-                {
-                    ModelState.AddModelError("CourseId", "The Course field is required.");
-                }
-            }
-            else
+            // Validate DepartmentId and CourseId, Make sure they are not zero
+            if (studentCourse.DepartmentId == 0)
             {
                 ModelState.AddModelError("DepartmentId", "The Department field is required.");
             }
 
+            if(studentCourse.CourseId == 0)
+            {
+                ModelState.AddModelError("CourseId", "The Course field is required.");
+            }
 
-            DepartmentService departmentService = new DepartmentService(_Context);
-            List<Department> departments = departmentService.GetAllDepartments();
-            ViewBag.Departments = departments;
-            ViewBag.Courses = _Context.Courses.ToList();
+            if (ModelState.IsValid)
+            {
+                Student student = new Student()
+                {
+                    Name = studentCourse.Name,
+                    Age = studentCourse.Age,
+                    Address = studentCourse.Address,
+                    ImageURL = studentCourse.ImageURL,
+                    Email = studentCourse.Email,
+                    DepartmentId = studentCourse.DepartmentId
+                };
+
+                bool isAdded = _StudentService.AddStudent(student);
+                if (isAdded)
+                {
+                    // Now add the student course
+                    StudentCourse sc = new StudentCourse()
+                    {
+                        StudentId = student.SSN,
+                        CourseId = (int)studentCourse.CourseId,
+                        Grade = (float)studentCourse.Grade
+                    };
+            
+                    if (_StudentService.AddStudentCourse(sc))
+                        //Student Course added successfully
+                        return RedirectToAction("GetAll");
+                }
+            
+            }
+
+            // If we reach here, something went wrong, redisplay the form
+            ViewBag.Departments = _DepartmentService.GetAllDepartments();
+            ViewBag.Courses = _CourseService.GetAllCourses();
             return View("Add", studentCourse);
         }
 
         [HttpGet]
         public IActionResult Edit(int Id)
         {
-            StudentService studentService = new StudentService(_Context);
-            Student? student = studentService.GetStudentById(Id);
+            Student? student = _StudentService.GetStudentById(Id);
 
             StudentCourseViewModel studentCourse = new StudentCourseViewModel()
             {
@@ -116,115 +111,100 @@ namespace MVCProject.Controllers
                 ImageURL = student.ImageURL,
                 Email = student.Email,
                 DepartmentId = student.DepartmentId,
-                CourseId = _Context.StudentCourses.FirstOrDefault(sc => sc.StudentId == Id)?.CourseId,
-                Grade = (float)(_Context.StudentCourses.FirstOrDefault(sc => sc.StudentId == Id)?.Grade ?? 0)
+                CourseId = _StudentService.GetStudentCourse(Id).CourseId,
+                Grade = _StudentService.GetStudentCourse(Id).Grade
             };
 
-            DepartmentService departmentService = new DepartmentService(_Context);
-            List<Department> departments = departmentService.GetAllDepartments();
-            ViewBag.Departments = departments;
-            ViewBag.Courses = _Context.Courses.ToList();
+            ViewBag.Departments = _DepartmentService.GetAllDepartments(); 
+            ViewBag.Courses = _CourseService.GetAllCourses();
             return View("Edit", studentCourse);
         }
 
         [HttpPost]
         public IActionResult Edit(StudentCourseViewModel studentCourse)
         {
-            if(studentCourse.DepartmentId != 0)
-            {
-                if(studentCourse.CourseId != 0)
-                {
-                    if (ModelState.IsValid)
-                    {
-                        StudentService studentService = new StudentService(_Context);
-                        Student student = new Student()
-                        {
-                            SSN = studentCourse.SSN,
-                            Name = studentCourse.Name,
-                            Age = studentCourse.Age,
-                            Address = studentCourse.Address,
-                            ImageURL = studentCourse.ImageURL,
-                            Email = studentCourse.Email,
-                            DepartmentId = studentCourse.DepartmentId
-                        };
-
-                        if (studentService.UpdateStudent(student))
-                        {
-                            StudentCourse sc = _Context.StudentCourses.Where(sc => sc.StudentId == student.SSN).FirstOrDefault();
-                            // Now Update the student course if exists
-
-                            #region Very Improtant Note
-                            //if you want to update a record in EF and this record consists of composite key you have to remove
-                            //it from the database first then add it again with the updated values
-                            #endregion
-
-                            if (sc != null)
-                            {
-
-                                _Context.StudentCourses.Remove(sc);
-                                _Context.SaveChanges();
-
-                                StudentCourse newSC = new StudentCourse()
-                                {
-                                    StudentId = student.SSN,
-                                    CourseId = (int)studentCourse.CourseId,
-                                    Grade = (float)studentCourse.Grade
-                                };
-
-                                _Context.StudentCourses.Add(newSC);
-
-                                if (_Context.SaveChanges() > 0)
-                                    //Student Course updated successfully
-                                    return RedirectToAction("GetAll");
-                            }
-                            else
-                            {
-                                // if not exists Add new student course record
-                                StudentCourse newSC = new StudentCourse()
-                                {
-                                    StudentId = student.SSN,
-                                    CourseId = (int)studentCourse.CourseId,
-                                    Grade = (float)studentCourse.Grade
-                                };
-                                _Context.StudentCourses.Add(newSC);
-
-                                if (_Context.SaveChanges() > 0)
-                                    //Student Course added successfully
-                                    return RedirectToAction("GetAll");
-                            }
-
-                        }
-
-                    }
-                }
-                else
-                {
-                    ModelState.AddModelError("CourseId", "The Course field is required.");
-                }
-            }
-            else
+            // Validate DepartmentId and CourseId, Make sure they are not zero
+            if (studentCourse.DepartmentId == 0)
             {
                 ModelState.AddModelError("DepartmentId", "The Department field is required.");
             }
 
+            if (studentCourse.CourseId == 0)
+            {
+                ModelState.AddModelError("CourseId", "The Course field is required.");
+            }
 
-            DepartmentService departmentService = new DepartmentService(_Context);
-            List<Department> departments = departmentService.GetAllDepartments();
-            ViewBag.Departments = departments;
-            ViewBag.Courses = _Context.Courses.ToList();
+            if (ModelState.IsValid)
+            {
+                Student student = new Student()
+                {
+                    SSN = studentCourse.SSN,
+                    Name = studentCourse.Name,
+                    Age = studentCourse.Age,
+                    Address = studentCourse.Address,
+                    ImageURL = studentCourse.ImageURL,
+                    Email = studentCourse.Email,
+                    DepartmentId = studentCourse.DepartmentId
+                };
+
+                if (_StudentService.UpdateStudent(student))
+                {
+                    StudentCourse sc = _StudentService.GetStudentHavingCourse(student.SSN);
+                    //StudentCourse sc = _Context.StudentCourses.Where(sc => sc.StudentId == student.SSN).FirstOrDefault();
+                    // Now Update the student course if exists
+
+                    #region Very Improtant Note
+                    //if you want to update a record in EF and this record consists of composite key you have to remove
+                    //it from the database first then add it again with the updated values
+                    #endregion
+
+                    if (sc != null)
+                    {
+                        _StudentService.DeleteStudentCourse(sc);
+
+                        StudentCourse newSC = new StudentCourse()
+                        {
+                            StudentId = student.SSN,
+                            CourseId = (int)studentCourse.CourseId,
+                            Grade = (float)studentCourse.Grade
+                        };
+
+                        if (_StudentService.AddStudentCourse(newSC))
+                            //Student Course updated successfully
+                            return RedirectToAction("GetAll");
+                    }
+                    else
+                    {
+                        // if not exists Add new student course record
+                        StudentCourse newSC = new StudentCourse()
+                        {
+                            StudentId = student.SSN,
+                            CourseId = (int)studentCourse.CourseId,
+                            Grade = (float)studentCourse.Grade
+                        };
+
+                        if (_StudentService.AddStudentCourse(newSC))
+                            //Student Course updated successfully
+                            return RedirectToAction("GetAll");
+                    }
+                }
+
+            }
+
+            // If we reach here, something went wrong, redisplay the form
+            ViewBag.Departments = _DepartmentService.GetAllDepartments();
+            ViewBag.Courses = _CourseService.GetAllCourses();
             return View("Edit", studentCourse);
 
         }
 
         public IActionResult Delete(int Id)
         {
-            StudentService studentService = new StudentService(_Context);
-            Student? student = studentService.GetStudentById(Id);
+            Student? student = _StudentService.GetStudentById(Id);
 
             if(student != null)
             {
-                _Context.Students.Remove(student);
-                if(_Context.SaveChanges() > 0)
+                if(_StudentService.DeleteStudent(student))
                 {
                     return RedirectToAction("GetAll");
                 }
