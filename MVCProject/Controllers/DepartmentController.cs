@@ -3,11 +3,13 @@ using BusinessLogicLayer.Service;
 using DataAccessLayer.Context;
 using DataAccessLayer.Models;
 using DataAccessLayer.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCProject.Filters;
 
 namespace MVCProject.Controllers
 {
+    [Authorize]
     public class DepartmentController : Controller
     {
         private readonly IDepartmentService _DepartmentService;
@@ -17,6 +19,7 @@ namespace MVCProject.Controllers
             _DepartmentService = departmentService;
         }
 
+        [Authorize(Roles = "Admin,Student,Instructor")]
         [Route("Departments/All")]
         public IActionResult GetAll()
         {
@@ -25,6 +28,7 @@ namespace MVCProject.Controllers
             return View("GetAll", Departments);
         }
 
+        [Authorize(Roles = "Admin,Student,Instructor")]
         [Route("Departments/{id:int:min(1)}")]
         public IActionResult GetById(int Id)
         {
@@ -41,6 +45,7 @@ namespace MVCProject.Controllers
             return View("GetById", Department);
         }
 
+        [Authorize(Roles = "Admin,Student,Instructor")]
         //Route Configuration is in Program.cs
         public IActionResult GetByName(string Name)
         {
@@ -49,6 +54,7 @@ namespace MVCProject.Controllers
             return View("GetByName", Department);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Add()
         {
@@ -69,6 +75,7 @@ namespace MVCProject.Controllers
             return View("Add", department);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult AddV2()
         {
@@ -90,6 +97,7 @@ namespace MVCProject.Controllers
             return View("AddV2", department);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Edit(int Id)
         {
@@ -111,6 +119,7 @@ namespace MVCProject.Controllers
             return View("Edit", department);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int Id)
         {
             _DepartmentService.DeleteAllDepartmentBranches(Id);

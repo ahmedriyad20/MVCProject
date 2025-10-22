@@ -2,8 +2,11 @@
 @model List<Instructor>
 
 <h1 class="text-center">All Instructors</h1>
+@if(User.IsInRole("Admin"))
+{
+    <a asp-action="Add" asp-controller="Instructor" class="btn btn-primary btn-lg " style="width: 25%;">Add Instructor</a>
 
-<a asp-action="Add" asp-controller="Instructor" class="btn btn-primary btn-lg " style="width: 25%;">Add Instructor</a>
+}
 <br />
 <br />
 <table class="table table-bordered table-hover">
@@ -16,7 +19,10 @@
         <th>Image</th>
         <th>Hiring Date</th>
         <th>Actions</th>
-        <th>Courses</th>
+        @if(User.IsInRole("Admin"))
+        {
+            <th> Courses </th>
+        }
     </tr>
     @foreach (var item in Model)
     {
@@ -30,10 +36,18 @@
             <td>@item.HiringDate</td>
             <td>
                 <a asp-action="GetById" asp-controller="Instructor" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                <a asp-action="Edit" asp-controller="Instructor" asp-route-id="@item.Id" class="btn btn-warning">Update Instructor</a>
-                <a asp-action="Delete" asp-controller="Instructor" asp-route-id="@item.Id" class="btn btn-danger">Delete Instructor</a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-controller="Instructor" asp-route-id="@item.Id" class="btn btn-warning">Update Instructor</a>
+                    <a asp-action="Delete" asp-controller="Instructor" asp-route-id="@item.Id" class="btn btn-danger">Delete Instructor</a>
+
+                }
+                
             </td>
-            <td><a asp-action="ManageCourses" asp-controller="Instructor" asp-route-id="@item.Id" class="btn btn-info">Manage Courses</a></td>
+            @if (User.IsInRole("Admin"))
+            {
+                <td><a asp-action="ManageCourses" asp-controller="Instructor" asp-route-id="@item.Id" class="btn btn-info">Manage Courses</a></td>
+            }
         </tr>
     }
 </table>

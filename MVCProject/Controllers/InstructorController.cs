@@ -2,12 +2,14 @@
 using BusinessLogicLayer.Service;
 using DataAccessLayer.Context;
 using DataAccessLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCProject.Filters;
 
 namespace MVCProject.Controllers
 {
+    [Authorize]
     public class InstructorController : Controller
     {
         // Access to the DbContext
@@ -23,6 +25,7 @@ namespace MVCProject.Controllers
             _CourseService = courseService;
         }
 
+        [Authorize(Roles = "Admin,Student,Instructor")]
         [Route("Instructors/All")]
         [ExceptionHandleFilter]
         [ResourceFilter("instructors-list", 60)]
@@ -34,8 +37,9 @@ namespace MVCProject.Controllers
             return View("GetAll", Instructors);
         }
 
+        [Authorize(Roles = "Admin,Instructor")]
         [Route("Instructors/{id:int:min(1)}")]
-        [AuthorizationFilter(false)]
+        [AuthorizationFilter(true)]
         public IActionResult GetById(int Id)
         {
             var Instructor = _InstructorService.GetInstructorById(Id);
@@ -44,7 +48,7 @@ namespace MVCProject.Controllers
             return View("GetById", Instructor);
         }
 
-        
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Add()
         {
@@ -75,6 +79,7 @@ namespace MVCProject.Controllers
             return View("Add", instructor);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Edit(int Id)
         {
@@ -120,6 +125,7 @@ namespace MVCProject.Controllers
 
         ////////////////////////////////////////// Instructor-Course Management Section //////////////////////////////////////////
 
+        [Authorize(Roles = "Admin")]
         public IActionResult ManageCourses(int Id)
         {
             var instructor = _InstructorService.GetInstructorById(Id);
@@ -127,6 +133,7 @@ namespace MVCProject.Controllers
             return View(instructor);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult AddCourse(int Id)
         {
@@ -158,6 +165,7 @@ namespace MVCProject.Controllers
             return View("AddCourse", instructorCourse);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult UpdateCourse(int InstructorId, int CourseId)
         {
@@ -179,6 +187,7 @@ namespace MVCProject.Controllers
             return View("UpdateCourse", instructorCourse);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteCourse(int InstructorId, int CourseId)
         {
             InstructorCourse? instructorCourse = _InstructorService.GetInstructorCourse(InstructorId, CourseId);

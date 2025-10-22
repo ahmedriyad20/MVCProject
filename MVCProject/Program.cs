@@ -1,11 +1,15 @@
 using BusinessLogicLayer.IService;
 using BusinessLogicLayer.Service;
 using DataAccessLayer.Context;
+using DataAccessLayer.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
 using MVCProject.Filters;
 using MVCProject.Middleware;
 using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace MVCProject
 {
@@ -14,6 +18,18 @@ namespace MVCProject
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
+                .AddCookie()
+                .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+                {
+                    options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
+                    options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
+                });
 
             // Add Memory Cache service
             builder.Services.AddMemoryCache();
@@ -32,6 +48,18 @@ namespace MVCProject
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("UniversityDBConnectionString"));
             });
+
+            //REGISTER ApplicationUser and IdentityRole with the DI Container
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 4;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = false;
+            })
+                .AddEntityFrameworkStores<UniversityContext>();
+            //.AddDefaultTokenProviders();
 
             //Dependency Injection for Service Layer
             builder.Services.AddScoped<IStudentService, StudentService>();
@@ -65,7 +93,7 @@ namespace MVCProject
 
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();

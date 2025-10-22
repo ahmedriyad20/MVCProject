@@ -2,6 +2,7 @@
 using BusinessLogicLayer.Service;
 using DataAccessLayer.Context;
 using DataAccessLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MVCProject.Controllers
@@ -15,6 +16,7 @@ namespace MVCProject.Controllers
             _CourseService = courseService;
         }
 
+        [Authorize(Roles = "Admin")]
         [Route("Courses/All")]
         [Route("Courses")]
         public IActionResult GetAll()
@@ -23,6 +25,7 @@ namespace MVCProject.Controllers
             return View("GetAll", Courses);
         }
 
+        [Authorize(Roles = "Admin")]
         [Route("Courses/{id:int:min(1)}")]
         public IActionResult GetById(int Id)
         {
@@ -32,6 +35,7 @@ namespace MVCProject.Controllers
             return View("GetById", Course);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Add()
         {
@@ -52,6 +56,7 @@ namespace MVCProject.Controllers
             return View("Add", Course);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Edit(int Id)
         {
@@ -73,6 +78,7 @@ namespace MVCProject.Controllers
             return View("Edit", Course);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int Id)
         {
             Course? Course = _CourseService.GetCourseById(Id);
